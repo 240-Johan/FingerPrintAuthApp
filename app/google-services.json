@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "325029294864",
+    "project_id": "fingerprintauthenticatio-f2eb8",
+    "storage_bucket": "fingerprintauthenticatio-f2eb8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325029294864:android:ad03cf419fbd13f159eb95",
+        "android_client_info": {
+          "package_name": "com.project.fingerprintauthentication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "325029294864-hfl6bk23fheabrtdkrkrd37lvl4a2bk4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIQ-UA6iTdJ13lxVui_KIDgIQ1CvWS1Ik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "325029294864-hfl6bk23fheabrtdkrkrd37lvl4a2bk4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
