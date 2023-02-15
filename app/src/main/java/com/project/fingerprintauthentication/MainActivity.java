@@ -4,17 +4,30 @@ import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRON
 import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.concurrent.Executor;
 
@@ -25,11 +38,41 @@ public class MainActivity extends AppCompatActivity {
 
     private BiometricPrompt biometricPrompt;
     private BiometricPrompt.PromptInfo promptInfo;
+    EditText inputEmail, inputPassword;
+    Button btnLogin;
+
+    FirebaseAuth mAuth;
+    FirebaseUser mUser;
+
+    ProgressDialog progressDialog;
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageViewLogin=findViewById(R.id.imageView);
+        inputEmail=findViewById(R.id.inputID);
+        inputPassword=findViewById(R.id.inputPassword);
+        btnLogin=findViewById(R.id.btnLogin);
+        mAuth=FirebaseAuth.getInstance();
+        mUser=mAuth.getCurrentUser();
+
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               String email=inputEmail.getText().toString();
+               String password=inputPassword.getText().toString();
+               PerformAuth(email, password);
+            }
+        });
+
+        sharedPreferences=getSharedPreferences("data",MODE_PRIVATE);
+        boolean isLogin=sharedPreferences.getBoolean("isLogin", false);
+        if (isLogin){
+
+            imageViewLogin.setVisibility(View.VISIBLE);
+        }
 
         BiometricManager biometricManager = BiometricManager.from(this);
         switch (biometricManager.canAuthenticate(BIOMETRIC_STRONG | DEVICE_CREDENTIAL)) {
@@ -67,9 +110,11 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthenticationSucceeded(
                     @NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                startActivity(new Intent(MainActivity.this, HomeActivity.class));
-                Toast.makeText(getApplicationContext(),
-                        "Authentication succeeded!", Toast.LENGTH_SHORT).show();
+
+                String email=sharedPreferences.getString("email","");
+                String password=sharedPreferences.getString("password","");
+
+                PerformAuth(email,password);
             }
 
             @Override
@@ -96,7 +141,26 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void PerformAuth(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
 
+                if (task.isSuccessful())
+                {
+                    SharedPreferences.Editor editor=getSharedPreferences("data",MODE_PRIVATE).edit();
+                    editor.putString("email", email);
+                    editor.putString("password",password);
+                    editor.putBoolean("isLogin", true);
+                    editor.apply();
+                    startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                    Toast.makeText(MainActivity.this, "login Successful", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(MainActivity.this, ""+task.getException(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
 
 }
