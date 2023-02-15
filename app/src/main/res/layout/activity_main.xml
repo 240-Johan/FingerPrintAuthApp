@@ -4,7 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    >
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="220dp"
+        android:background="@color/purple_500"
+        tools:ignore="MissingConstraints">>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:text="LOGIN"
+            android:textColor="@android:color/white"
+            android:textSize="@android:dimen/app_icon_size"
+            android:fontFamily="sans-serif-black"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
 
     <ImageView
         android:id="@+id/imageView"
@@ -23,11 +42,13 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="20dp"
-        android:text="Login"
+        android:text="Submit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/inputPassword"
+
+        />
 
     <EditText
         android:id="@+id/inputID"
